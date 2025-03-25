@@ -1,31 +1,31 @@
 package fr.ensai.mediaplayer;
 
-// Définition d'une classe abstraite pour représenter un média générique
 public abstract class Media {
-    protected final String title;
-    protected final int year;
-    protected final int duration;
+    public String title;
+    public int duration;
+    public int year;
 
-    // Constructeur pour initialiser un média
-    public Media(String title, int year, int duration) {
-        if (duration <= 0) {
-            throw new IllegalArgumentException("La durée doit être positive.");
-        }
+    /**
+     * Construction of a new Media object.
+     *
+     * @param title    The title of the Media.
+     * @param year     The year the Media was released.
+     * @param duration The duration of the Media in seconds.
+     */
+
+    public Media(String title, int duration, int year) {
         this.title = title;
-        this.year = year;
         this.duration = duration;
+        this.year = year;
     }
 
-    // Obtention de la durée du média
-    public int getDuration() {
-        return duration;
-    }
+    public abstract void play();
 
-    // Obtenir le titre du média
-    public String getTitle() {
-        return title;
+    /**
+     * Textual representation of the Media.
+     */
+    @Override
+    public String toString() {
+        return "Title: " + title + " (" + year + "), Durée: " + duration + " min";
     }
-
-    // Définir une méthode abstraite pour afficher les détails du média
-    public abstract String getDescription();
 }

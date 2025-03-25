@@ -3,63 +3,82 @@ package fr.ensai.mediaplayer;
 import java.util.ArrayList;
 import java.util.List;
 
-// Définition d'une classe représentant une playlist.
 public class Playlist {
-    private final String name;
-    private final List<Media> mediaList;
+    public String name;
+    public List<Media> mediaList;
+    public int totalDuration;
 
-    // Constructeur pour initialiser une playlist vide.
     public Playlist(String name) {
         this.name = name;
         this.mediaList = new ArrayList<>();
+        this.totalDuration = 0;
     }
 
-    // Ajout d'un média à la playlist.
+    // Add Media to a Playlist
     public void addMedia(Media media) {
-        if (media != null) {
-            mediaList.add(media);
+        mediaList.add(media);
+        totalDuration += media.duration;
+    }
+
+    // Remove Media from a Playlist
+    public boolean removeMedia(Media media) {
+
+        if (this.mediaList.contains(media)) {
+            this.mediaList.remove(media);
+            this.totalDuration -= media.duration;
+            return true;
+        } else {
+            return false;
         }
     }
 
-    // Suppression d'un média de la playlist (par objet)
-    public void removeMedia(Media media) {
-        mediaList.remove(media);
-    }
-
-    // Suppression d'un média par son index
-    public void removeMediaAt(int index) {
-        if (index >= 0 && index < mediaList.size()) {
-            mediaList.remove(index);
+    public boolean removeMedia(int i) {
+        if (i > 0 && i <= this.mediaList.size()) {
+            Media todelete = this.mediaList.get(i);
+            mediaList.remove(todelete);
+            int duration = todelete.duration;
+            this.totalDuration -= duration;
+            return true;
+        } else {
+            return false;
         }
     }
 
-    // Copie de la playlist avec un nouveau nom
-    public Playlist copy(String newName) {
-        Playlist copy = new Playlist(newName);
-        copy.mediaList.addAll(List.copyOf(mediaList)); // Empêcher les modifications accidentelles
-        return copy;
-    }
-
-    // Calcul de la durée totale de la playlist
-    public int getTotalDuration() {
-        return mediaList.stream().mapToInt(Media::getDuration).sum();
-    }
-
-    // Lecture de la playlist (avec un ordre configurable)
-    public void play(boolean shuffle) {
-        List<Media> playOrder = shuffle ? new ArrayList<>(mediaList) : mediaList;
-        if (shuffle) {
-            java.util.Collections.shuffle(playOrder);
+    public void randomplay(boolean random) {
+        if (this.mediaList.isEmpty()) {
+            try {
+                throw new IndexOutOfBoundsException("Your playlist is empty !!");
+            } catch (IndexOutOfBoundsException e) {
+                System.out.println(e.getMessage());
+            }
+        } else {
+            if (random) {
+                int range = mediaList.size();
+                int randomvar = (int) ((range * Math.random()));
+                Media mediatoplay = this.mediaList.get(randomvar);
+                mediatoplay.play();
+            } else {
+                for (Media media : mediaList) {
+                    media.play();
+                }
+            }
         }
 
-        for (Media media : playOrder) {
-            System.out.println(media.getDescription());
-        }
     }
 
-    // Affichage une représentation textuelle de la playlist
+    public Playlist(Playlist other) {
+        this.name = other.name;
+        this.mediaList = other.mediaList;
+        this.totalDuration = other.totalDuration;
+    }
+
+    // Display a Playlist
     @Override
     public String toString() {
-        return "Playlist '" + name + "' avec " + mediaList.size() + " médias";
+        return "Playlist{" +
+                "name='" + name + '\'' +
+                ", mediaList=" + mediaList +
+                ", totalDuration=" + totalDuration +
+                '}';
     }
 }

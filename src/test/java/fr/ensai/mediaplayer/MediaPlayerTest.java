@@ -1,113 +1,84 @@
 package fr.ensai.mediaplayer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
-class MediaTest {
+import fr.ensai.mediaplayer.Playlist;
+import fr.ensai.mediaplayer.Podcast;
+import fr.ensai.mediaplayer.Song;
 
-    // =========================================
-    // Tests pour la classe Song
-    // =========================================
-    @Test
-    void songPlay_ShouldPrintLyricsWithDelay() {
-        // GIVEN
-        Artist singer = new Artist("Ed", "Sheeran", "British");
-        String lyrics = "I'm in love with the shape of you";
-        Song song = new Song(
-                "Shape of You",
-                2017,
-                234,
-                singer,
-                singer,
-                singer,
-                lyrics,
-                List.of(Genre.POP));
+class MediaPlayerTest {
 
-        // WHEN/THEN
-        // Vérification visuelle manuelle nécessaire pour le délai
-        song.play(); // Doit afficher les paroles mot par mot
-    }
+        @Test
+        void removemedia_by_media() {
 
-    @Test
-    void songToString_ShouldReturnFormattedString() {
-        // GIVEN
-        Artist singer = new Artist("Adele", "Adkins", "British");
-        Song song = new Song(
-                "Hello",
-                2015,
-                295,
-                singer,
-                singer,
-                singer,
-                "Hello from the other side",
-                List.of(Genre.POP));
+                // GIVEN
 
-        // WHEN
-        String result = song.toString();
+                Artist singer1 = new Artist("Stromae", "Paul Van Haver", "Belgian");
 
-        // THEN
-        assertEquals("Song: Hello (2015) - Singer: Artist Adele Adkins", result);
-    }
+                String lyrics1 = """
+                                Dites-moi où, n'avez-vous caché votre âme ?
+                                Ça doit faire au moins mille fois que j'ai compté mes doigts
+                                """;
 
-    // =========================================
-    // Tests pour la classe Podcast
-    // =========================================
-    @Test
-    void podcastPlay_ShouldPrintSubtitles() {
-        // GIVEN
-        Podcast podcast = new Podcast(
-                "Tech Today",
-                "John Doe",
-                "Java Programming",
-                1800,
-                2023,
-                "Bienvenue dans ce podcast sur Java...");
+                List<String> songGenres = Arrays.asList("Electro-Pop", "Chanson Française");
+                Song stromae = new Song("Papaoutai", singer1, 2013, 230, lyrics1, singer1, singer1, songGenres);
 
-        // WHEN/THEN
-        podcast.play(); // Doit afficher les sous-titres
-    }
+                Artist singer2 = new Artist("Angèle", "Van Laeken", "Belgian");
 
-    @Test
-    void podcastToString_ShouldReturnFormattedString() {
-        // GIVEN
-        Podcast podcast = new Podcast(
-                "Science Weekly",
-                "Marie Curie",
-                "Physique",
-                1500,
-                2024,
-                "Les dernières découvertes...");
+                String lyrics2 = """
+                                Tu n'auras plus mon respect
+                                Si t’parles comme tous ces mecs
+                                """;
+                Song angele = new Song("Balance ton quoi", singer2, 2019, 215, lyrics2, singer2, singer2, songGenres);
 
-        // WHEN
-        String result = podcast.toString();
+                Podcast podcast = new Podcast("Le Débrief Tech", "Alex Martin", "Technology", 2024, 1500,
+                                "Analyse des dernières tendances en IA");
 
-        // THEN
-        assertEquals("Podcast: Science Weekly (2024) - Host: Marie Curie", result);
-    }
+                Playlist playlist = new Playlist("Playlist 1");
+                playlist.addMedia(stromae);
+                playlist.addMedia(angele);
+                playlist.addMedia(podcast);
 
-    // =========================================
-    // Tests communs pour Media
-    // =========================================
-    @Test
-    void mediaGetters_ShouldReturnCorrectValues() {
-        // GIVEN
-        Artist artist = new Artist("David", "Guetta", "French");
-        Song song = new Song(
-                "Titanium",
-                2011,
-                245,
-                artist,
-                artist,
-                artist,
-                "You shout it out...",
-                List.of(Genre.ELECTRO));
+                // THEN
+                assertTrue(playlist.removeMedia(angele));
+        }
 
-        // WHEN/THEN
-        assertEquals(245, song.getDuration());
-        assertEquals("Titanium", song.getTitle());
-        assertEquals(2011, song.getYear());
-    }
+        @Test
+        void removemedia_by_index() {
+
+                // GIVEN
+                Artist singer1 = new Artist("Stromae", "Paul Van Haver", "Belgian");
+
+                String lyrics1 = """
+                                Dites-moi où, n'avez-vous caché votre âme ?
+                                Ça doit faire au moins mille fois que j'ai compté mes doigts
+                                """;
+
+                List<String> songGenres = Arrays.asList("Electro-Pop", "Chanson Française");
+                Song stromae = new Song("Papaoutai", singer1, 2013, 230, lyrics1, singer1, singer1, songGenres);
+
+                Artist singer2 = new Artist("Angèle", "Van Laeken", "Belgian");
+
+                String lyrics2 = """
+                                Tu n'auras plus mon respect
+                                Si t’parles comme tous ces mecs
+                                """;
+                Song angele = new Song("Balance ton quoi", singer2, 2019, 215, lyrics2, singer2, singer2, songGenres);
+
+                Podcast podcast = new Podcast("Le Débrief Tech", "Alex Martin", "Technology", 2024, 1500,
+                                "Analyse des dernières tendances en IA");
+                ;
+
+                Playlist playlist = new Playlist("Playlist 1");
+                playlist.addMedia(stromae);
+                playlist.addMedia(angele);
+                playlist.addMedia(podcast);
+
+                // THEN
+                assertTrue(playlist.removeMedia(1)); // Supprime "Balance ton quoi"
+        }
 }

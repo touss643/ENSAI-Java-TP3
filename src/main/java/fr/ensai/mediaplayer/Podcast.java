@@ -1,22 +1,43 @@
 package fr.ensai.mediaplayer;
 
-// Définition d'une classe représentant un podcast.
 public class Podcast extends Media {
-    private final String host;
-    private final String topic;
-    private final String subtitles;
+    private String host;
+    private String topic;
+    private String subtitles;
 
-    // Constructeur pour initialiser un podcast.
+    /**
+     * Construction of a new Podcast object.
+     *
+     * @param host      Represents the host of the Podcast.
+     * @param topic     The topic we will talk in the Podcast.
+     * @param subtitles The discussion in the Podcast.
+     */
+
     public Podcast(String title, String host, String topic, int duration, int year, String subtitles) {
-        super(title, year, duration);
+        super(title, duration, year);
         this.host = host;
         this.topic = topic;
         this.subtitles = subtitles;
     }
 
-    // Obtention la description du podcast.
     @Override
-    public String getDescription() {
-        return "Podcast: " + title + " animé par " + host + " sur " + topic;
+    public void play() {
+        System.out.println("podcast in processing : " + title);
+        String[] words = subtitles.split("\\s+");
+        for (String word : words) {
+            System.out.print(word + " ");
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                System.err.println("Thread was interrupted");
+            }
+        }
+        System.out.println();
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + ", Host: " + host + ", Topic: " + topic;
     }
 }
